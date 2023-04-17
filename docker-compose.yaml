@@ -1,0 +1,68 @@
+version: '3'
+services:
+  producer:
+    build: ./producer
+    ports:
+      - "5000:5000"  # Example: expose port 5000 for communication with the producer
+    depends_on:
+      - rabbitmq
+    environment:
+      - PYTHONUNBUFFERED=true
+  consumer_one:
+    build: ./consumer_one
+    depends_on:
+      - rabbitmq
+    ports:
+      - "5001:5001"
+    environment:
+      - CONSUMER_ID=1
+      - PRODUCER_ADDRESS=http://producer:5000
+
+  consumer_two:
+    build: ./consumer_two
+    depends_on:
+      - rabbitmq
+      - mysql
+    ports:
+      - "5002:5002"
+    environment:
+      - CONSUMER_ID=2
+      - PRODUCER_ADDRESS=http://producer:5000
+
+  consumer_three:
+    build: ./consumer_three
+    depends_on:
+      - rabbitmq
+      - mysql
+    ports:
+      - "5003:5003"
+    environment:
+      - CONSUMER_ID=3
+      - PRODUCER_ADDRESS=http://producer:5000
+
+  consumer_four:
+    build: ./consumer_four
+    depends_on:
+      - rabbitmq
+      - mysql
+    ports:
+      - "5004:5004"
+    environment:
+      - CONSUMER_ID=4
+      - PRODUCER_ADDRESS=http://producer:5000
+
+  rabbitmq:
+    image: rabbitmq:3.9-management
+    environment:
+    - RABBITMQ_DEFAULT_USER=guest
+    - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5672:5672"  # Expose RabbitMQ default port for communication
+      - "15672:15672"
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: abc123
+      MYSQL_DATABASE: students
+    ports:
+      - "3306:3306"  # Expose MySQL default port for communication

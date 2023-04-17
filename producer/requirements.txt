@@ -1,0 +1,10 @@
+Flask==2.1.0
+importlib-metadata==4.8.3
+itsdangerous==2.0.1
+mypy-extensions==0.4.3
+pika==1.2.0
+platformdirs==2.4.0
+tomli==1.2.3
+typed-ast==1.5.2
+typing_extensions==4.1.1
+requests==2.27.1
