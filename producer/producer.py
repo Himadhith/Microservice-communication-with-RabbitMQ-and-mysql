@@ -65,7 +65,7 @@ def index():
 @app.route('/health_check', methods=['GET'])
 def health_check():
     message = request.args.get('message', '')
-    sleep_time = request.args.get('time', type=float)
+    # sleep_time = request.args.get('time', type=float)
 
     started = False
     while not started:
@@ -77,13 +77,13 @@ def health_check():
             time.sleep(5)
 
     channel = connection.channel()
-    channel.queue_declare(queue='health_check', durable=True)
+    channel.queue_declare(queue='health_check', durable=False)
 
     global TASK_ID_COUNT
     task_data = {
         'message': message,
         'task_id': TASK_ID_COUNT,
-        'time': sleep_time
+        # 'time': sleep_time
     }
     TASK_ID_COUNT += 1
 
@@ -153,7 +153,7 @@ def read_db():
             time.sleep(5)
 
     channel = connection.channel()
-    channel.queue_declare(queue='read_db', durable=True)
+    channel.queue_declare(queue='read_db', durable=False)
 
     global TASK_ID_COUNT
     task_data = {
@@ -202,7 +202,7 @@ def insert():
     #     return str(e)
 
     channel = connection.channel()
-    channel.queue_declare(queue='insert', durable=True)
+    channel.queue_declare(queue='insert', durable=False)
 
     # sleep_time = request.json['time']
     # .get('time')
@@ -251,7 +251,7 @@ def delete():
     #     return str(e)
 
     channel = connection.channel()
-    channel.queue_declare(queue='delete', durable=True)
+    channel.queue_declare(queue='delete', durable=False)
 
     # sleep_time = request.json['time']
     # .get('time')

@@ -10,6 +10,7 @@ WORKDIR /my-app
 # Copy requirements and install
 COPY ./requirements.txt /my-app/requirements.txt
 RUN pip3 install -r /my-app/requirements.txt
+RUN pip3 install cryptography
 
 # Copy consumer file
 COPY ./insertion.py /my-app/insertion.py

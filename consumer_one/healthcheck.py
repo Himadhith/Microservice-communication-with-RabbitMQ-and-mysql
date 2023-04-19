@@ -8,6 +8,15 @@ import time
 import json
 import sys
 
+def connect_to_rabbitmq(host, retry_interval=5, max_retries=12):
+    for _ in range(max_retries):
+        try:
+            return pika.BlockingConnection(pika.ConnectionParameters(host=host))
+        except pika.exceptions.AMQPConnectionError as e:
+            print(f"Connection to RabbitMQ failed. Retrying in {retry_interval} seconds...")
+            time.sleep(retry_interval)
+    raise Exception("Failed to connect to RabbitMQ after multiple retries.")
+
 def main():
     server_ip = os.environ.get('PRODUCER_ADDRESS')
     # server_port = os.environ.get('server_port')
@@ -20,7 +29,8 @@ def main():
 
 # Connection to RabbitMQ
     credentials = pika.PlainCredentials(rabbitmq_user, rabbitmq_password)
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host, port=rabbitmq_port, credentials=credentials))
+    # connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host, port=rabbitmq_port, credentials=credentials))
+    connection = connect_to_rabbitmq('rabbitmq')
     channel = connection.channel()
 
 # Declare the "health_check" queue
